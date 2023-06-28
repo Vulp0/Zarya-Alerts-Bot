@@ -56,18 +56,12 @@ bot.command("say", ctx =>{
 });
 
 bot.command("shibe", ctx =>{
-    //not working, commented out because of that
-    // fetch("https://shibe.online/api/shibes?count=1&urls=true&httpsUrls=true")
-    //     .then((response) =>{
-    //         if(!response.ok){
-    //             ctx.sendMessage("Something fucked up lol");
-    //         }
-
-    //         return response.blob();
-    //     })
-    //     .then((response => {
-    //         ctx.sendPhoto(response);
-    //     }));
+    //this command does nothing useful lol
+    fetch("https://shibe.online/api/shibes?count=1&urls=true&httpsUrls=true")
+        .then((response) => response.json())
+        .then(jsonResponse => {
+            ctx.sendPhoto(jsonResponse[0]);
+        });
 });
 
 bot.launch();
