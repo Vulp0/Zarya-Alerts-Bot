@@ -1,3 +1,2 @@
 node_modules/
-pKey.txt
-tKey.txt
+.env

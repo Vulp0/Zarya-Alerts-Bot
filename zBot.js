@@ -1,34 +1,9 @@
-// const bot = createBot();
+require('dotenv').config()
 
 const {Telegraf} = require("telegraf");
-const bot = new Telegraf("Not uploading my key lol");
-
-//should be displayed when user types /help
-//its empty for now, since, again, i don't know what to put there
-// const helpMessage = "";
+const bot = new Telegraf(process.env.TKEY);
 
 console.log("Bot is now running...");
-
-//both of these are failed attempts at getting the key from another file, might delete them later
-// async function getKeys(){
-//     try {
-//         telegramKey = await fs.readFile("./tKey.txt", {encoding: "utf8"});
-//     } catch(err) {
-//         console.log("something got fucked up: " + err);
-//     }
-// }
-
-// async function createBot(){
-//     try {
-//         const fs = require("fs/promises");
-//         const {Telegraf} = require("telegraf");
-//         const telegramKey = await fs.readFile("./tKey.txt", {encoding: "utf8"});
-//         const bot = new Telegraf(telegramKey);
-//     } catch(err) {
-//         console.log("there's been a fucky wucky!: " + err);
-//     }
-//     return bot;
-// }
 
 
 bot.start(ctx => {
@@ -80,5 +55,19 @@ bot.command("say", ctx =>{
     }
 });
 
+bot.command("shibe", ctx =>{
+    //not working, commented out because of that
+    // fetch("https://shibe.online/api/shibes?count=1&urls=true&httpsUrls=true")
+    //     .then((response) =>{
+    //         if(!response.ok){
+    //             ctx.sendMessage("Something fucked up lol");
+    //         }
+
+    //         return response.blob();
+    //     })
+    //     .then((response => {
+    //         ctx.sendPhoto(response);
+    //     }));
+});
 
 bot.launch();
