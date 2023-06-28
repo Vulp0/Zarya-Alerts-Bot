@@ -57,6 +57,7 @@ bot.command("say", ctx =>{
 
 bot.command("shibe", ctx =>{
     //this command does nothing useful lol
+    ctx.sendMessage("Getting a random shiba picture, wait a moment");
     fetch("https://shibe.online/api/shibes?count=1&urls=true&httpsUrls=true")
         .then((response) => response.json())
         .then(jsonResponse => {
