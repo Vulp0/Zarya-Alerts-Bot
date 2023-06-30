@@ -33,17 +33,17 @@ bot.command("rng", ctx => {
     }
 })
 
-bot.command("whoyou", ctx =>{
+bot.command("whoyou", ctx => {
     ctx.sendMessage("I'm " + ctx.botInfo.first_name + "!");
 });
 
-bot.command("whome", ctx =>{
+bot.command("whome", ctx => {
     ctx.sendMessage("You're " + ctx.update.message.from.username + "!");
 });
 
 //note to myself, telegram is not like discord so if you want to handle arguments in commands, you'll have to do something like this
 //separate the user's text into an array, where index 0 will be the /command itself, and from index 1 onwards are the "parameters" for the command
-bot.command("say", ctx =>{
+bot.command("say", ctx => {
     let userMsgArray = ctx.message.text.split(" ");
 
     if(userMsgArray.length == 1){
@@ -55,14 +55,24 @@ bot.command("say", ctx =>{
     }
 });
 
-bot.command("shibe", ctx =>{
+bot.command("shibe", ctx => {
     //this command does nothing useful lol
     ctx.sendMessage("Getting a random shiba picture, wait a moment");
     fetch("https://shibe.online/api/shibes?count=1&urls=true&httpsUrls=true")
         .then((response) => response.json())
         .then(jsonResponse => {
-            ctx.sendPhoto(jsonResponse[0]);
+            ctx.sendPhoto(jsonResponse[0], {caption: "Here's your shiba!"});
         });
 });
+
+bot.command("replyme", ctx => {
+    let userMsgArray = ctx.message.text.split(" ");
+
+    let messageTemplate = "Replying to <b>" + ctx.message.from.first_name + "'s</b> message. Message content: \"<i>" + userMsgArray.join(" ") + "</i>\"";
+    ctx.reply(messageTemplate, {
+        reply_to_message_id: ctx.message.message_id,
+        parse_mode: "HTML"
+    });
+})
 
 bot.launch();
