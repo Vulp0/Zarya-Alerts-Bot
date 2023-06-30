@@ -90,6 +90,7 @@ bot.command("sma", ctx => {
         .then(response => response.json())
         .then(jsonResponse => {
             let result = jsonResponse;
+            
             //to access anything in result, use bracket notation like ["results"] instead of dot notation like .results 
             //this will print the timestamp and value of the first result of the call
             // console.log(result["results"]["values"][0]["timestamp"]);
