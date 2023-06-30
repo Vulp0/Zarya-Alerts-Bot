@@ -55,16 +55,17 @@ bot.command("say", ctx => {
     }
 });
 
+//test command, no practical purpose
 bot.command("shibe", ctx => {
-    //this command does nothing useful lol
     ctx.sendMessage("Getting a random shiba picture, wait a moment");
     fetch("https://shibe.online/api/shibes?count=1&urls=true&httpsUrls=true")
-        .then((response) => response.json())
+        .then(response => response.json())
         .then(jsonResponse => {
             ctx.sendPhoto(jsonResponse[0], {caption: "Here's your shiba!"});
         });
 });
 
+//test command, serves no practical purpose other than me learning how it works
 bot.command("replyme", ctx => {
     let userMsgArray = ctx.message.text.split(" ");
 
@@ -74,5 +75,31 @@ bot.command("replyme", ctx => {
         parse_mode: "HTML"
     });
 })
+
+bot.command("sma", ctx => {
+    //command use should be: /sma <symb> <timeWindow>
+    //where symb(type: str, required) is the symbol of the given coin
+    //where timeWindow(type: int, required) is how many days it should look back in time
+    let userMsgArray = ctx.message.text.split(" ");
+    // let symb = userMsgArray[1];
+    // let timeWindow = userMsgArray[2];
+    let apiCallUrl = `https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=day&window=1&series_type=close&order=desc&limit=10&apiKey=${process.env.PKEY}`
+
+    //test call, to see if api key works
+    fetch(apiCallUrl)
+        .then(response => response.json())
+        .then(jsonResponse => {
+            let result = jsonResponse;
+            //to access anything in result, use bracket notation like ["results"] instead of dot notation like .results 
+            //this will print the timestamp and value of the first result of the call
+            // console.log(result["results"]["values"][0]["timestamp"]);
+            // console.log(result["results"]["values"][0]["value"]);
+
+            //shows the amount of values
+            // console.log(result["results"]["values"].length);
+        });
+
+
+});
 
 bot.launch();
