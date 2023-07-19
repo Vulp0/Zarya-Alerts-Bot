@@ -103,4 +103,9 @@ bot.command("sma", ctx => {
 
 });
 
+bot.command("alist", ctx => {
+    //command use: /alist <limit> <sort> <order> <meta>
+    //where
+})
+
 bot.launch();
