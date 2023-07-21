@@ -31,7 +31,7 @@ bot.command("rng", ctx => {
     } else {
         ctx.sendMessage("You didn't follow proper syntax, use: /rng <whole_number>");
     }
-})
+});
 
 bot.command("whoyou", ctx => {
     ctx.sendMessage("I'm " + ctx.botInfo.first_name + "!");
@@ -74,38 +74,78 @@ bot.command("replyme", ctx => {
         reply_to_message_id: ctx.message.message_id,
         parse_mode: "HTML"
     });
-})
-
-bot.command("sma", ctx => {
-    //command use should be: /sma <symb> <timeWindow>
-    //where symb(type: str, required) is the symbol of the given coin
-    //where timeWindow(type: int, required) is how many days it should look back in time
-    let userMsgArray = ctx.message.text.split(" ");
-    // let symb = userMsgArray[1];
-    // let timeWindow = userMsgArray[2];
-    let apiCallUrl = `https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=day&window=1&series_type=close&order=desc&limit=10&apiKey=${process.env.PKEY}`
-
-    //test call, to see if api key works
-    fetch(apiCallUrl)
-        .then(response => response.json())
-        .then(jsonResponse => {
-            let result = jsonResponse;
-            
-            //to access anything in result, use bracket notation like ["results"] instead of dot notation like .results 
-            //this will print the timestamp and value of the first result of the call
-            // console.log(result["results"]["values"][0]["timestamp"]);
-            // console.log(result["results"]["values"][0]["value"]);
-
-            //shows the amount of values
-            // console.log(result["results"]["values"].length);
-        });
-
-
 });
 
-bot.command("alist", ctx => {
-    //command use: /alist <limit> <sort> <order> <meta>
-    //where
-})
+// bot.command("sma", ctx => {
+//     //command use should be: /sma <symb> <timeWindow>
+//     //where symb(type: str, required) is the symbol of the given coin
+//     //where timeWindow(type: int, required) is how many days it should look back in time
+//     let userMsgArray = ctx.message.text.split(" ");
+//     // let symb = userMsgArray[1];
+//     // let timeWindow = userMsgArray[2];
+//     let apiCallUrl = `https://api.polygon.io/v1/indicators/sma/X:BTCUSD?timespan=day&window=1&series_type=close&order=desc&limit=10&apiKey=${process.env.PKEY}`
+
+//     //test call, to see if api key works
+//     fetch(apiCallUrl)
+//         .then(response => response.json())
+//         .then(jsonResponse => {
+//             let result = jsonResponse;
+            
+//             //to access anything in result, use bracket notation like ["results"] instead of dot notation like .results 
+//             //this will print the timestamp and value of the first result of the call
+//             // console.log(result["results"]["values"][0]["timestamp"]);
+//             // console.log(result["results"]["values"][0]["value"]);
+
+//             //shows the amount of values
+//             // console.log(result["results"]["values"].length);
+//         });
+
+
+// });
+
+// bot.command("alist", ctx => {
+//     //command use: /alist <limit> <sort> <order> <meta>
+//     //where
+// })
+
+bot.command("credits", ctx => {
+    let apiCallUrl = "https://api.livecoinwatch.com/credits";
+
+    fetch(apiCallUrl, {
+        method: "POST",
+        headers: new Headers({
+            "content-type": "application/json",
+            "x-api-key": process.env.LCWKEY
+        })
+    })
+    .then(response => response.json())
+    .then(jsonResponse => {
+        let result = jsonResponse;
+        let messageTemplate = `Your remaining LCW API credits: ${result["dailyCreditsRemaining"]} out of ${result["dailyCreditsLimit"]}`;
+
+        ctx.sendMessage(messageTemplate);
+    });
+});
+
+bot.command("in", ctx => {
+    let userMsgArray = ctx.message.text.split(" ");
+    let messageTemplate = "";
+    let userInput = parseFloat(userMsgArray[1]);
+
+    if(userMsgArray.length == 1) {
+        ctx.sendMessage("Command incomplete, correct command usage: \"/in 10\" ");
+    } else {
+        if(isNaN(userInput)) {
+            ctx.sendMessage(`That's not a valid number, try again`);
+        } else {
+            userInput == 1 ? messageTemplate += `${userInput} inch is equal to:` : messageTemplate += `${userInput} inches are equal to:`
+            messageTemplate += `\n• ${userInput * 2.54 } centimeters, \n• ${userInput * 0.0254 } meters`;
+    
+            ctx.sendMessage(messageTemplate, {
+                parse_mode: "HTML"
+            });
+        }
+    }
+});
 
 bot.launch();
