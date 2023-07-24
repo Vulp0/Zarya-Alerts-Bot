@@ -148,4 +148,25 @@ bot.command("in", ctx => {
     }
 });
 
+bot.command("ft", ctx => {
+    let userMsgArray = ctx.message.text.split(" ");
+    let messageTemplate = "";
+    let userInput = parseFloat(userMsgArray[1]);
+
+    if(userMsgArray.length == 1) {
+        ctx.sendMessage("Command incomplete, correct command usage: \"/in 10\" ");
+    } else {
+        if(isNaN(userInput)) {
+            ctx.sendMessage(`That's not a valid number, try again`);
+        } else {
+            userInput == 1 ? messageTemplate += `${userInput} inch is equal to:` : messageTemplate += `${userInput} inches are equal to:`
+            messageTemplate += `\n• ${userInput * 30.48 } centimeters, \n• ${userInput * 0.3048 } meters, \n• ${userInput * 12 } inches`;
+    
+            ctx.sendMessage(messageTemplate, {
+                parse_mode: "HTML"
+            });
+        }
+    }
+});
+
 bot.launch();
