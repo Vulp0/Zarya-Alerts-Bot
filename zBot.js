@@ -154,7 +154,7 @@ bot.command("ft", ctx => {
     let userInput = parseFloat(userMsgArray[1]);
 
     if(userMsgArray.length == 1) {
-        ctx.sendMessage("Command incomplete, correct command usage: \"/in 10\" ");
+        ctx.sendMessage("Command incomplete, Correct command usage: \"/in 10\" ");
     } else {
         if(isNaN(userInput)) {
             ctx.sendMessage(`That's not a valid number, try again`);
@@ -167,6 +167,50 @@ bot.command("ft", ctx => {
             });
         }
     }
+});
+
+bot.command("check", ctx => {
+    let userMsgArray = ctx.message.text.split(" ");
+    
+    let messageTemplate = "";
+
+    if(userMsgArray.length == 1) {
+        ctx.sendMessage("Missign argument: code. Correct command usage: \"/check BTC\"");
+    } else {
+        let userInput = userMsgArray[1];
+        let apiCallUrl = "https://api.livecoinwatch.com/coins/single";
+
+        ctx.sendMessage(`Fetching info about ${userInput.toUpperCase()}, hold on...`);
+
+        fetch(apiCallUrl, {
+            method: "POST",
+            headers: new Headers({
+                "content-type": "application/json",
+                "x-api-key": process.env.LCWKEY
+            }),
+            body: JSON.stringify({
+                currency: "USD",
+                code: userInput,
+                meta: true
+            })
+        })
+        .then(response => response.json())
+        .then(jsonResponse => {
+            let result = jsonResponse;
+            
+            if("error" in result) {
+                ctx.sendMessage("Error, coin code is either unknown or not in all caps. \nCorrect command usage: /check BTC");
+            } else {
+                //okay so, i can't directly use sendMessage(result) because it says there's no text, but i can send each 
+                //this is so jank oh my god
+                let messageTemplate = `Coin: ${result["name"]}\nRanked: ${result["rank"]}\nTraded in ${result["exchanges"]} exchanges.\n\nWith a total supply of ${result["totalSupply"]} out of ${result["maxSupply"]}, and a circulating supply of ${result["circulatingSupply"]}.\n\nCurrent price as of (right now): $${result["rate"]}\nVolume: ${result["volume"]}\nMarket cap: ${result["cap"]}
+                `;
+
+                ctx.sendMessage(messageTemplate);
+            }
+        });
+    }
+
 });
 
 bot.launch();
