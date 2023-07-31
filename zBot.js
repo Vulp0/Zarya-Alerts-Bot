@@ -202,7 +202,7 @@ bot.command("check", ctx => {
                 ctx.sendMessage("Error, coin code is either unknown or not in all caps. \nCorrect command usage: /check BTC");
             } else {
                 //okay so, i can't directly use sendMessage(result) because it says there's no text, but i can send each 
-                //this is so jank oh my god
+                //this is so janky oh my god
                 let messageTemplate = `Coin: ${result["name"]}\nRanked: ${result["rank"]}\nTraded in ${result["exchanges"]} exchanges.\n\nWith a total supply of ${result["totalSupply"]} out of ${result["maxSupply"]}, and a circulating supply of ${result["circulatingSupply"]}.\n\nCurrent price as of (right now): $${result["rate"]}\nVolume: ${result["volume"]}\nMarket cap: ${result["cap"]}
                 `;
 
