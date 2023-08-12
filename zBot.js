@@ -13,9 +13,70 @@ bot.start(ctx => {
 //start, help and settings all have to be defined commands, because of good practices
 //idk what to put in them yet so they're commented out for now
 
-// bot.help(ctx => {
-//     ctx.sendMessage("Nobody is coming to help you");
-// });
+bot.help(ctx => {
+
+    let userMsgArray = ctx.message.text.split(" ");
+    let userArg;
+    let messageTemplate = "";
+    let commandList = ["credits", "check", "shibe", "rng"];
+
+    if(userMsgArray[1]) {
+        userArg = userMsgArray[1];
+
+        switch (userArg) {
+            //prepare for JANK JANK JANK JANKSJKA
+            case commandList[0]:
+                messageTemplate += "<b>Command:</b> /credits" + "\n<b>Parameters:</b> <i>NONE</i>";
+                messageTemplate += "\n<b>Desc:</b> Shows you how many Livecoinwatch api calls you have left." + "\n<b>Example:</b> /credits";
+
+                ctx.sendMessage(messageTemplate, {
+                    parse_mode: "HTML"
+                });
+                break;
+            case commandList[1]:
+                messageTemplate += "<b>Command:</b> /check" + "\n<b>Parameters:</b> <i>(text: code)</i>";
+                messageTemplate += "\n<b>Desc:</b> Given a coin code, return its name, current price, and the date in which it was checked.";
+                messageTemplate += "\n<b>Example:</b> /check eth";
+
+                ctx.sendMessage(messageTemplate, {
+                    parse_mode: "HTML"
+                });
+                break;
+            case commandList[2]:
+                messageTemplate += "<b>Command:</b> /shibe" + "\n<b>Parameters:</b> <i>NONE</i>";
+                messageTemplate += "\n<b>Desc:</b> Sends you a pic of a shiba inu, just because.";
+                messageTemplate += "\n<b>Example:</b> /shibe";
+
+                ctx.sendMessage(messageTemplate, {
+                    parse_mode: "HTML"
+                });
+                break;
+            case commandList[3]:
+                messageTemplate += "<b>Command:</b> /rng" + "\n<b>Parameters:</b> <i>(number: limit)</i>";
+                messageTemplate += "\n<b>Desc:</b> Returns a random number from 0 to whatever number you give it";
+                messageTemplate += "\n<b>Example:</b> /rng 100";
+
+                ctx.sendMessage(messageTemplate, {
+                    parse_mode: "HTML"
+                });
+                break;
+        
+            default:
+                ctx.sendMessage("Did you type the name right? Does that command even exist?");
+                break;
+        }
+    } else {
+        ctx.sendMessage("To get more info about a specific command, type <i>/help</i> then the name of command.", {
+            parse_mode: "HTML"
+        });
+    }
+    //later...
+    // messageTemplate += "<b>Command:</b> /check" + "\n<b>Usage example:</b> /check <i>code</i>";
+    // messageTemplate += "\n<b>Description:</b> Given a coin code, returns the name, price and the date and time of the request.";
+    // ctx.sendMessage(messageTemplate, {
+    //     parse_mode: "HTML"
+    // });
+});
 
 // bot.settings(ctx => {
 //     ctx.sendMessage("How about i set deez balls in ur mouth lmao");
@@ -23,13 +84,13 @@ bot.start(ctx => {
 
 bot.command("rng", ctx => {
     let userMsgArray = ctx.message.text.split(" ");
-    let userParam = Number.parseInt(userMsgArray[1]);
+    let userArg = Number.parseInt(userMsgArray[1]);
 
-    if(userMsgArray.length == 2 && Number.isInteger(userParam)){
-        let result = "Here's a random number between 0 and " + userMsgArray[1] + ": \n" + (Math.floor(Math.random()*userParam)).toString();
+    if(userMsgArray.length == 2 && Number.isInteger(userArg)){
+        let result = "Here's a random number between 0 and " + userMsgArray[1] + ": \n" + (Math.floor(Math.random()*userArg)).toString();
         ctx.sendMessage(result);
     } else {
-        ctx.sendMessage("You didn't follow proper syntax, use: /rng 100");
+        ctx.sendMessage("You didn't follow proper syntax, type \"/help rng\" for more info");
     }
 });
 
@@ -121,7 +182,7 @@ bot.command("credits", ctx => {
     .then(response => response.json())
     .then(jsonResponse => {
         let result = jsonResponse;
-        let messageTemplate = `Your remaining LCW API credits: ${result["dailyCreditsRemaining"]} out of ${result["dailyCreditsLimit"]}`;
+        let messageTemplate = `Your remaining LCW API credits: ${result["dailyCreditsRemaining"]}/${result["dailyCreditsLimit"]}`;
 
         ctx.sendMessage(messageTemplate);
     });
@@ -171,11 +232,10 @@ bot.command("credits", ctx => {
 
 bot.command("check", ctx => {
     let userMsgArray = ctx.message.text.split(" ");
-    
     let messageTemplate = "";
 
     if(userMsgArray.length == 1) {
-        ctx.sendMessage("Missign argument: code. Correct command usage: \"/check BTC\"");
+        ctx.sendMessage("Missign argument. Type \"/help check\" for more info");
     } else {
         let userInput = userMsgArray[1];
         let apiCallUrl = "https://api.livecoinwatch.com/coins/single";
@@ -198,15 +258,22 @@ bot.command("check", ctx => {
         .then(jsonResponse => {
             let result = jsonResponse;
             //this is such a mess, man
-            let messageTemplate = `${result["name"]} (${userInput.toUpperCase()})\n$Priced at $${result["rate"]}\nAs of: ${new Date}`;
+            let messageTemplate = `${result["name"]} (${userInput.toUpperCase()})\nPriced at $${result["rate"]}\nAs of: ${new Date}`;
             ctx.sendMessage(messageTemplate);
         });
     }
 
 });
 
-bot.command("emo", ctx => {
-    ctx.sendMessage("e");
-})
+//commented out for the time being, WIP WIP WIP WIP
+// bot.command("change", ctx => {
+//     let userMsgArray = ctx.message.text.split(" ");
+//     let commandSwitch = false;
+//     let messageTemplate = "";
+
+//     if(userMsgArray.length == 1) {
+//         ctx.sendMessage("Missign argument: code. Correct command usage: \"/change BTC 10\"");
+//     }
+// })
 
 bot.launch();
